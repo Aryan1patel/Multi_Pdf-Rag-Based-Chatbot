@@ -165,7 +165,7 @@ def create_vectorstore(text_chunks):
 # ------------------ Conversation ------------------ #
 def get_conversation_chain(vectorstore):
     """Create a ConversationalRetrievalChain with memory."""
-    llm = ChatGroq(model_name="qwen/qwen3.8-27b", temperature=0)
+    llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0)
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
         llm=llm,

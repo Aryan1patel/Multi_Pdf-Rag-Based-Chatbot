@@ -69,7 +69,7 @@ def create_vectorstore(text_chunks: list[str]):
 
 
 def create_conversation_chain(vectorstore):
-    llm = ChatGroq(model_name="qwen/qwen3.8-27b", temperature=0)
+    llm = ChatGroq(model_name="llama-3.1-8b-instant", temperature=0)
     memory = ConversationBufferMemory(
         memory_key="chat_history", return_messages=True
     )
