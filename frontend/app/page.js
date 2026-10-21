@@ -104,7 +104,7 @@ export default function Home() {
 
           <h1 className={`display ${styles.heroTitle}`}>
             Chat with your<br />
-            <span className="grad-text">PDFs</span>
+            <span className="grad-text-green">PDFs</span>
           </h1>
 
           <p className={styles.heroSub}>
