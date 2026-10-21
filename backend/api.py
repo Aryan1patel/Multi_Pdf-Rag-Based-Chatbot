@@ -7,7 +7,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_classic.chains import ConversationalRetrievalChain
 from langchain_classic.memory import ConversationBufferMemory
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings, HuggingFaceInferenceAPIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
 from langchain_text_splitters import CharacterTextSplitter
@@ -61,10 +61,18 @@ def get_text_chunks(raw_text: str) -> list[str]:
 
 
 def create_vectorstore(text_chunks: list[str]):
-    """Use local HuggingFace embeddings — runs fully on-device, no API call needed."""
-    embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2",
-    )
+    """Auto-select embeddings: remote HF Inference API if token is set (production/Render),
+    otherwise fall back to local model (local dev)."""
+    hf_token = os.environ.get("HUGGINGFACE_API_TOKEN")
+    if hf_token:
+        embeddings = HuggingFaceInferenceAPIEmbeddings(
+            api_key=hf_token,
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+        )
+    else:
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+        )
     return FAISS.from_texts(texts=text_chunks, embedding=embeddings)
 
 
